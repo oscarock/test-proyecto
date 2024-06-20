@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/auth', [AuthController::class, 'authenticate']);
+Route::post('register', [AuthController::class, 'register'])->withoutMiddleware('custom.jwt');
 
 Route::middleware('custom.jwt')->group(function () {
     Route::apiResource('tasks', TaskController::class)->except([
