@@ -12,10 +12,24 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $tasks = Task::all();
+            $query = Task::query();
+
+            // Filtrar por status si está presente en la solicitud
+            if ($request->has('status')) {
+                $query->where('status', $request->input('status'));
+            }
+
+            // Filtrar por due_date si está presente en la solicitud
+            if ($request->has('due_date')) {
+                $query->whereDate('due_date', $request->input('due_date'));
+            }
+
+            // Obtener las tareas filtradas
+            $tasks = $query->get();
+
             return response()->json($tasks, 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener las tareas.'], 500);
